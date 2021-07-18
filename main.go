@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"runtime"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
@@ -10,15 +9,28 @@ import (
 	"fyne.io/fyne/v2/widget"
 	"github.com/atotto/clipboard"
 	"os"
+	"runtime"
 	"strings"
 )
 
 func main() {
-	fmt.Println(VERSION)
-	os.Setenv(FONT_ENV_NAME, FONT_WIN_MEIRYO_PATH)
+	var formatBtnName = "Format"
+	var convertBtnName = "ConvertToJSON"
+	var pasteBtnName = "Paste"
+	var copyBtnName = "Copy"
+
+	if strings.EqualFold(runtime.GOOS, "windows") {
+		os.Setenv(FONT_ENV_NAME, FONT_WIN_MEIRYO_PATH)
+		formatBtnName = "整形"
+		convertBtnName = "JSON化"
+		pasteBtnName = "貼り付け"
+		copyBtnName = "コピー"
+	}
 
 	myApp := app.New()
+
 	myWindow := myApp.NewWindow(APP_NAME + " " + VERSION)
+	myWindow.Resize(fyne.NewSize(INTI_WINDOW_WIDTH, INTI_WINDOW_HEIGHT))
 
 	input := widget.NewMultiLineEntry()
 
@@ -28,19 +40,6 @@ func main() {
 
 	output := widget.NewMultiLineEntry()
 	output.Disable()
-
-	var formatBtnName = "Format"
-	var convertBtnName = "ConvertToJSON"
-	var pasteBtnName = "Paste"
-	var copyBtnName = "Copy"
-
-	if strings.EqualFold(runtime.GOOS, "windows") {
-		myWindow.Resize(fyne.NewSize(INTI_WINDOW_WIDTH, INTI_WINDOW_HEIGHT))
-		formatBtnName = "整形"
-		convertBtnName = "JSON化"
-		pasteBtnName = "貼り付け"
-		copyBtnName = "コピー"
-	}
 
 	formatBtn := widget.NewButton(formatBtnName, func() {
 		it := []byte(input.Text)
