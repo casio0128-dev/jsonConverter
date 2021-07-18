@@ -9,7 +9,6 @@ import (
 	"fyne.io/fyne/v2/widget"
 	"github.com/atotto/clipboard"
 	"os"
-	"regexp"
 	"strings"
 )
 
@@ -46,13 +45,7 @@ func main() {
 	formatBtn.Disable()
 
 	toJSONBtn := widget.NewButton("JSON化", func() {
-		xml, err := XML2JSON(input.Text, PREFIX_DEFAULT, INDENT_DEFAULT)
-		if err != nil {
-			output.SetText("")
-			fmt.Println(err)
-			return
-		}
-		output.SetText(string(xml))
+		output.SetText(convJSON(input.Text))
 	})
 	toJSONBtn.Disable()
 
@@ -84,17 +77,8 @@ func main() {
 		byteValue := []byte(v)
 		if j, err := FormatJSON(byteValue, PREFIX_DEFAULT, INDENT_DEFAULT); err != nil {
 			formatBtn.Disable()
-
-			reg, err := regexp.Compile(`<.+>.*</.+> | <?.+ ?>`)
-			if err != nil {
-				output.SetText("")
-				fmt.Println(err)
-				return
-			}
-
-			if reg.Match(byteValue) {
-				toJSONBtn.Enable()
-			}
+			output.SetText(convJSON(v))
+			toJSONBtn.Enable()
 		} else {
 			output.SetText(string(j))
 			formatBtn.Enable()
@@ -111,4 +95,12 @@ func main() {
 	myWindow.Show()
 
 	myApp.Run()
+}
+
+func convJSON(text string) string {
+	xml, err := XML2JSON(text, PREFIX_DEFAULT, INDENT_DEFAULT)
+	if err != nil {
+		return ""
+	}
+	return string(xml)
 }
