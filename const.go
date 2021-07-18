@@ -7,7 +7,7 @@ const (
 
 	APP_NAME      = "jsonConverter"
 	MAJOR_VERSION = "1"
-	MINOR_VERSION = "0"
+	MINOR_VERSION = "0.0"
  	VERSION       = "v" + MAJOR_VERSION + "." + MINOR_VERSION
 
  	INTI_WINDOW_HEIGHT = 700.0
