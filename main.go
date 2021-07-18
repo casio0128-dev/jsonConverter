@@ -18,6 +18,7 @@ func main() {
 	var convertBtnName = "ConvertToJSON"
 	var pasteBtnName = "Paste"
 	var copyBtnName = "Copy"
+	var inputPlaceHolderText = "Please input text for JSON or XML format."
 
 	if strings.EqualFold(runtime.GOOS, "windows") {
 		os.Setenv(FONT_ENV_NAME, FONT_WIN_MEIRYO_PATH)
@@ -33,6 +34,7 @@ func main() {
 	myWindow.Resize(fyne.NewSize(INTI_WINDOW_WIDTH, INTI_WINDOW_HEIGHT))
 
 	input := widget.NewMultiLineEntry()
+	input.SetPlaceHolder(inputPlaceHolderText)
 
 	if DEBUG {
 		input.SetText(DEBUG_SAMPLE_JSON)
