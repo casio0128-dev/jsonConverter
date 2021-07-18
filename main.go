@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"runtime"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
@@ -19,8 +20,6 @@ func main() {
 	myApp := app.New()
 	myWindow := myApp.NewWindow(APP_NAME + " " + VERSION)
 
-	myWindow.Resize(fyne.NewSize(INTI_WINDOW_WIDTH, INTI_WINDOW_HEIGHT))
-
 	input := widget.NewMultiLineEntry()
 
 	if DEBUG {
@@ -30,7 +29,20 @@ func main() {
 	output := widget.NewMultiLineEntry()
 	output.Disable()
 
-	formatBtn := widget.NewButton("整形", func() {
+	var formatBtnName = "Format"
+	var convertBtnName = "ConvertToJSON"
+	var pasteBtnName = "Paste"
+	var copyBtnName = "Copy"
+
+	if strings.EqualFold(runtime.GOOS, "windows") {
+		myWindow.Resize(fyne.NewSize(INTI_WINDOW_WIDTH, INTI_WINDOW_HEIGHT))
+		formatBtnName = "整形"
+		convertBtnName = "JSON化"
+		pasteBtnName = "貼り付け"
+		copyBtnName = "コピー"
+	}
+
+	formatBtn := widget.NewButton(formatBtnName, func() {
 		it := []byte(input.Text)
 
 		j, err := FormatJSON(it, PREFIX_DEFAULT, INDENT_DEFAULT)
@@ -44,12 +56,12 @@ func main() {
 	})
 	formatBtn.Disable()
 
-	toJSONBtn := widget.NewButton("JSON化", func() {
+	toJSONBtn := widget.NewButton(convertBtnName, func() {
 		output.SetText(convJSON(input.Text))
 	})
 	toJSONBtn.Disable()
 
-	pasteBtn := widget.NewButton("貼り付け", func() {
+	pasteBtn := widget.NewButton(pasteBtnName, func() {
 		clipboardTest, err := clipboard.ReadAll()
 		if err != nil {
 			output.SetText("")
@@ -60,7 +72,7 @@ func main() {
 		input.SetText(clipboardTest)
 	})
 
-	copyBtn := widget.NewButton("コピー", func() {
+	copyBtn := widget.NewButton(copyBtnName, func() {
 		if err := clipboard.WriteAll(output.Text); err != nil {
 			output.SetText("")
 			fmt.Println(err)
