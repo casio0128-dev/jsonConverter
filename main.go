@@ -85,12 +85,13 @@ func main() {
 		if j, err := FormatJSON(byteValue, PREFIX_DEFAULT, INDENT_DEFAULT); err != nil {
 			formatBtn.Disable()
 
-			reg, err := regexp.Compile(`<.+>.*</.+>`)
+			reg, err := regexp.Compile(`<.+>.*</.+> | <?.+ ?>`)
 			if err != nil {
 				output.SetText("")
 				fmt.Println(err)
 				return
 			}
+
 			if reg.Match(byteValue) {
 				toJSONBtn.Enable()
 			}
